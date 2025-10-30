@@ -1,18 +1,17 @@
 package com.pluralsight;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class DealershipFileManager {
 
     public Dealership getDealership() { //Dealership here is the return type - will return a Dealership object
-        // loads file
+        Dealership dealership = null; //had a scope issue and this fixed it (couldnt use teh last return)
+
         try (BufferedReader bReader = new BufferedReader(new FileReader("src/main/resources/inventory.csv"))) {
             // think of line like header from capstone 1
             String line = bReader.readLine();
             String[] h = line.split("\\|"); // array and splits sections with bar in the middle
-            Dealership dealership = new Dealership(h[0], h[1], h[2]); // h[0] will be dealership name, h[1] -address, h[2] -phone
+            dealership = new Dealership(h[0], h[1], h[2]); // h[0] will be dealership name, h[1] -address, h[2] -phone
 
             while ((line = bReader.readLine()) != null) { // When readLine() returns null it means there are no more lines
                 String[] parts = line.split("\\|"); // Splits the line into separate pieces using "|" (pipe)
@@ -29,15 +28,34 @@ public class DealershipFileManager {
                 Vehicle v = new Vehicle(vin, year, make, model, type, color, odometer, price);
                 dealership.addVehicle(v);                        // Uses Dealership to fill its inventory
             }
-            return dealership;
         } catch (IOException ex) {
             System.err.println("Problem reading inventory: " + ex.getMessage());
-
-            return null;
         }
+        return dealership;
     }
     public void saveDealership(Dealership dealership) {
-        // Write dealership and vehicles back to file
+        try (BufferedWriter bWriter = new BufferedWriter(new FileWriter("src/main/resources/inventory.csv"))) {
+
+            bWriter.write(dealership.getName() + "|" +
+                    dealership.getAddress() + "|" +
+                    dealership.getPhone());
+            bWriter.newLine();
+
+            // Write each vehicle
+            for (Vehicle v : dealership.getAllVehicles()) {
+                bWriter.write(v.getVin() + "|" +
+                        v.getYear() + "|" +
+                        v.getMake() + "|" +
+                        v.getModel() + "|" +
+                        v.getVehicleType() + "|" +
+                        v.getColor() + "|" +
+                        v.getOdometer() + "|" +
+                        v.getPrice());
+                bWriter.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing dealership file: " + e.getMessage());
+        }
     }
 
 }
