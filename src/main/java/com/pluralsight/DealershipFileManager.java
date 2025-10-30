@@ -9,14 +9,13 @@ public class DealershipFileManager {
     public Dealership getDealership() { //Dealership here is the return type - will return a Dealership object
         // loads file
         try (BufferedReader bReader = new BufferedReader(new FileReader("src/main/resources/inventory.csv"))) {
-            //NEED HEADER
-            String header = bReader.readLine();
-            String[] h = header.split("\\|"); // creates bar in the middle
+            // think of line like header from capstone 1
+            String line = bReader.readLine();
+            String[] h = line.split("\\|"); // array and splits sections with bar in the middle
             Dealership dealership = new Dealership(h[0], h[1], h[2]); // h[0] will be dealership name, h[1] -address, h[2] -phone
 
-            String info;
-            while ((info = bReader.readLine()) != null) { // When readLine() returns null it means there are no more lines
-                String[] parts = info.split("\\|"); // Splits the line into separate pieces using "|" (pipe)
+            while ((line = bReader.readLine()) != null) { // When readLine() returns null it means there are no more lines
+                String[] parts = line.split("\\|"); // Splits the line into separate pieces using "|" (pipe)
                 int vin = Integer.parseInt(parts[0]);
                 int year = Integer.parseInt(parts[1]);
                 String make = parts[2];
@@ -27,12 +26,13 @@ public class DealershipFileManager {
                 double price = Double.parseDouble(parts[7]);
 
                 // Creates a new Vehicle object using the data we just read and converted
-                Vehicle vehicles = new Vehicle(vin, year, make, model, type, color, odometer, price);
-                dealership.addVehicle(vehicles);                        // Uses Dealership to fill its inventory
+                Vehicle v = new Vehicle(vin, year, make, model, type, color, odometer, price);
+                dealership.addVehicle(v);                        // Uses Dealership to fill its inventory
             }
             return dealership;
         } catch (IOException ex) {
             System.err.println("Problem reading inventory: " + ex.getMessage());
+
             return null;
         }
     }

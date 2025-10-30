@@ -6,7 +6,7 @@ public class Dealership {
     private String name;
     private String address;
     private String phone;
-    private ArrayList<Vehicle> inventory;
+    private ArrayList<Vehicle> inventory; //keep private
      //instantiated array list vehicle so its never null
 
     //constructor
@@ -18,8 +18,8 @@ public class Dealership {
     }
 
     // These 2 instance methods get inventory from the Vehicle class
-    public void addVehicle(Vehicle vehicle) {
-        inventory.add(vehicle);
+    public void addVehicle(Vehicle newVehicle) {
+        inventory.add(newVehicle);
     }
     public ArrayList<Vehicle> getAllVehicles() {
         return inventory;
