@@ -1,49 +1,43 @@
 package com.pluralsight;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class DealershipFileManager {
 
-    public Dealership getDealership() {
+    public Dealership getDealership() { //Dealership here is the return type - will return a Dealership object
         // loads file
-       try (BufferedReader bReader = new BufferedReader(new FileReader("src/main/resources/inventory.csv"))) {
-           //NEED HEADER
-           //
+        try (BufferedReader bReader = new BufferedReader(new FileReader("src/main/resources/inventory.csv"))) {
+            //NEED HEADER
+            String header = bReader.readLine();
+            String[] h = header.split("\\|"); // creates bar in the middle
+            Dealership dealership = new Dealership(h[0], h[1], h[2]); // h[0] will be dealership name, h[1] -address, h[2] -phone
 
-       }
+            String info;
+            while ((info = bReader.readLine()) != null) { // When readLine() returns null it means there are no more lines
+                String[] parts = info.split("\\|"); // Splits the line into separate pieces using "|" (pipe)
+                int vin = Integer.parseInt(parts[0]);
+                int year = Integer.parseInt(parts[1]);
+                String make = parts[2];
+                String model = parts[3];
+                String type = parts[4];
+                String color = parts[5];
+                int odometer = Integer.parseInt(parts[6]);
+                double price = Double.parseDouble(parts[7]);
 
-
-//
-//            while ((info = bReader.readLine()) != null) {   // When readLine() returns null it means there are no more lines
-//                String[] parts = info.split("\\|");   // Splits the line into separate pieces using "|" (pipe)
-//                LocalDate date = LocalDate.parse(parts[0]); // converts date string into LocalDate object
-//                LocalTime time = LocalTime.parse(parts[1]); // converts time string into LocalTime object (did this for these as I wanted to keep them all together so I could
-//                String description = parts[2];
-//                String vendor = parts[3];
-//                double amount = Double.parseDouble(parts[4]); // Converts "amount" string into a double
-//
-//                Vehicle inventory = new Vehicle(vin, year, make, model,
-//                        vehicleType, color, odometer, price); // Creates a new Transaction object using the data we just read and converted
-//                inventory.add(transactions);                                                             // Adds this new Transaction object to the Array list (tList)
-//            }
-//
-//        } catch (FileNotFoundException e) {                 // runs if the file can’t be found
-//            System.err.println("Error: " + e.getMessage());
-//            // This catch handles general input/output problems
-//        } catch (IOException e) {
-//            System.err.println("Error" + e.getMessage());
-//        }
-
-
-        return null;
+                // Creates a new Vehicle object using the data we just read and converted
+                Vehicle vehicles = new Vehicle(vin, year, make, model, type, color, odometer, price);
+                dealership.addVehicle(vehicles);                        // Uses Dealership to fill its inventory
+            }
+            return dealership;
+        } catch (IOException ex) {
+            System.err.println("Problem reading inventory: " + ex.getMessage());
+            return null;
+        }
     }
-
     public void saveDealership(Dealership dealership) {
-        // Write file
+        // Write dealership and vehicles back to file
     }
+
 }
