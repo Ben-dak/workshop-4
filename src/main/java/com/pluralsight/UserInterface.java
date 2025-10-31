@@ -42,7 +42,7 @@ public class UserInterface {
 
     private void displayMenu() {
         System.out.println("""
-                    === Dealership App - Home Menu ===
+                    === Dealership Home Menu ===
                     1) Find vehicles by price range
                     2) Find vehicles by make / model
                     3) Find vehicles by year range
@@ -52,18 +52,9 @@ public class UserInterface {
                     7) List ALL vehicles
                     8) Add a vehicle
                     9) Remove a vehicle
-                    
                     10) Quit
                     """);
-        System.out.print("Enter your choice: ");
-    }
-
-    public void processAddVehicleRequest() {
-        Vehicle v = new Vehicle();
-        dealership.addVehicle(v);
-
-        DealershipFileManager dfm = new DealershipFileManager();
-        dfm.saveDealership(this.dealership);
+        System.out.println("Enter your choice: ");
     }
 
     private void processGetByPriceRequest() {
@@ -75,21 +66,21 @@ public class UserInterface {
         userInput = myScanner.nextLine();
         double max = Double.parseDouble(userInput);
 
-//        System.out.println(min + " " + max); - this tested it
-
         ArrayList<Vehicle> vehicles = this.dealership.getVehiclesByPrice(min, max);
         printVehicles(vehicles);
-
     }
 
     private void printVehicles(ArrayList<Vehicle> vehicles) {
         System.out.println("\nVehicles matching your search: ");
         for (Vehicle v: vehicles) {
-            System.out.println("Vin: " + v.getVin() + "Year: " + v.getYear() +
-                    "Make: " + v.getMake() + " | " + "Model: " +
-                    v.getModel() + " | " + "Price: " + v.getPrice() +
-                    "Type: " + v.getVehicleType() + "Color: " + v.getColor() +
-                    "Odometer: " + v.getOdometer() + "Odometer: " + v.getOdometer());
+            System.out.println("Vin: " + v.getVin() + "|" +
+                    "Year: " + v.getYear() + "|" +
+                    "Make: " + v.getMake() + "|" +
+                    "Model: " + v.getModel() + "|" +
+                    "Type: " + v.getVehicleType() + "|" +
+                    "Color: " + v.getColor() + "|" +
+                    "Odometer: " + v.getOdometer() + "|" +
+                    "Price: " + v.getPrice());
         }
     }
 
@@ -117,11 +108,34 @@ public class UserInterface {
         printVehicles(vehicles);
     }
 
-    private void processRemoveVehicleRequest() {
+    private void processGetByColorRequest() {
+        System.out.println("Enter color to search by: ");
+        String color = this.myScanner.nextLine();
+
+        ArrayList<Vehicle> vehicles = this.dealership.getVehiclesByColor(color);
+        printVehicles(vehicles);
 
     }
 
+    private void processGetByMileageRequest() {
+        System.out.println("Enter minimum mileage to search by: ");
+        String userInput = myScanner.nextLine();
+        int minMileage = Integer.parseInt(userInput);
+
+        System.out.println("Enter maximum mileage to search by: ");
+        userInput = myScanner.nextLine();
+        int maxMileage = Integer.parseInt(userInput);
+
+        ArrayList<Vehicle> vehicles = this.dealership.getVehiclesByMileage(minMileage, maxMileage);
+        printVehicles(vehicles);
+    }
+
     private void processGetByVehicleTypeRequest() {
+        System.out.println("Enter vehicle type to search by: ");
+        String type = this.myScanner.nextLine();
+
+        ArrayList<Vehicle> vehicles = this.dealership.getVehiclesByType(type);
+        printVehicles(vehicles);
 
     }
 
@@ -130,12 +144,23 @@ public class UserInterface {
         printVehicles(vehicles);
     }
 
-    private void processGetByMileageRequest() {
+    public void processAddVehicleRequest() {
+        Vehicle v = new Vehicle();
+        dealership.addVehicle(v);
+
+        DealershipFileManager dfm = new DealershipFileManager();
+        dfm.saveDealership(this.dealership);
     }
 
-    private void processGetByColorRequest() {
+    private void processRemoveVehicleRequest() {
 
     }
+
+
+
+
+
+
 }
 
 
