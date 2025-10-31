@@ -1,21 +1,21 @@
 package com.pluralsight;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserInterface {
-    Dealership dealership;
+    private Dealership dealership;
+    private Scanner myScanner = new Scanner(System.in);
     //will be using dealership class - can call
 
     // Show main menu and handle user choices (by calling display)
     public void display() {
-        init(); //loads dealership
+        init();        //loads dealership
 
-        Scanner myScanner = new Scanner(System.in);
         boolean running = true;
 
         while (running) {
-            displayVehicleMenu(); // calling helper method
-            System.out.print("Enter your choice: ");
+            displayMenu(); // calling helper method
             int input = myScanner.nextInt();
             myScanner.nextLine(); //trying out nextInt
 
@@ -30,7 +30,7 @@ public class UserInterface {
                 case 8 -> processAddVehicleRequest();
                 case 9 -> processRemoveVehicleRequest();
                 case 10 -> running = false;
-                default -> System.out.println("Invalid option.");
+                default -> System.err.println("Invalid option.");
             }
         }
     }
@@ -40,7 +40,7 @@ public class UserInterface {
         dealership = fileManager.getDealership();  // loads from file
     }
 
-    private void displayVehicleMenu() {
+    private void displayMenu() {
         System.out.println("""
                     === Dealership App - Home Menu ===
                     1) Find vehicles by price range
@@ -67,13 +67,54 @@ public class UserInterface {
     }
 
     private void processGetByPriceRequest() {
+        System.out.println("Enter minimum price: ");
+        String userInput = myScanner.nextLine();
+        double min = Double.parseDouble(userInput);
+
+        System.out.println("Enter maximum price: ");
+        userInput = myScanner.nextLine();
+        double max = Double.parseDouble(userInput);
+
+//        System.out.println(min + " " + max); - this tested it
+
+        ArrayList<Vehicle> vehicles = this.dealership.getVehiclesByPrice(min, max);
+        printVehicles(vehicles);
 
     }
+
+    private void printVehicles(ArrayList<Vehicle> vehicles) {
+        System.out.println("\nVehicles matching your search: ");
+        for (Vehicle v: vehicles) {
+            System.out.println("Vin: " + v.getVin() + "Year: " + v.getYear() +
+                    "Make: " + v.getMake() + " | " + "Model: " +
+                    v.getModel() + " | " + "Price: " + v.getPrice() +
+                    "Type: " + v.getVehicleType() + "Color: " + v.getColor() +
+                    "Odometer: " + v.getOdometer() + "Odometer: " + v.getOdometer());
+        }
+    }
+
     private void processGetByMakeModelRequest() {
+        System.out.println("Enter make to search by: ");
+        String make = this.myScanner.nextLine();
 
+        System.out.println("Enter model to search by: ");
+        String model = this.myScanner.nextLine();
+
+        ArrayList<Vehicle> vehicles = this.dealership.getVehiclesByMakeModel(make, model);
+        printVehicles(vehicles);
     }
-    private void processGetByYearRequest() {
 
+    private void processGetByYearRequest() {
+        System.out.println("Enter minimum year to search by: ");
+        String userInput = myScanner.nextLine();
+        int minYear = Integer.parseInt(userInput);
+
+        System.out.println("Enter maximum year to search by: ");
+        userInput = myScanner.nextLine();
+        int maxYear = Integer.parseInt(userInput);
+
+        ArrayList<Vehicle> vehicles = this.dealership.getVehiclesByYear(minYear, maxYear);
+        printVehicles(vehicles);
     }
 
     private void processRemoveVehicleRequest() {
@@ -85,7 +126,8 @@ public class UserInterface {
     }
 
     private void processGetAllVehiclesRequest() {
-
+        ArrayList<Vehicle> vehicles = this.dealership.getAllVehicles();
+        printVehicles(vehicles);
     }
 
     private void processGetByMileageRequest() {
@@ -94,6 +136,6 @@ public class UserInterface {
     private void processGetByColorRequest() {
 
     }
-
-
 }
+
+

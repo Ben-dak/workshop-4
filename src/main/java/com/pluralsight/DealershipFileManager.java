@@ -5,7 +5,7 @@ import java.io.*;
 public class DealershipFileManager {
 
     public Dealership getDealership() { //Dealership here is the return type - will return a Dealership object
-        Dealership dealership = null; //had a scope issue and this fixed it (couldnt use teh last return)
+        Dealership dealership = null;
 
         try (BufferedReader bReader = new BufferedReader(new FileReader("src/main/resources/inventory.csv"))) {
             // think of line like header from capstone 1
@@ -33,29 +33,8 @@ public class DealershipFileManager {
         }
         return dealership;
     }
+
     public void saveDealership(Dealership dealership) {
-        try (BufferedWriter bWriter = new BufferedWriter(new FileWriter("src/main/resources/inventory.csv"))) {
 
-            bWriter.write(dealership.getName() + "|" +
-                    dealership.getAddress() + "|" +
-                    dealership.getPhone());
-            bWriter.newLine();
-
-            // Write each vehicle
-            for (Vehicle v : dealership.getAllVehicles()) {
-                bWriter.write(v.getVin() + "|" +
-                        v.getYear() + "|" +
-                        v.getMake() + "|" +
-                        v.getModel() + "|" +
-                        v.getVehicleType() + "|" +
-                        v.getColor() + "|" +
-                        v.getOdometer() + "|" +
-                        v.getPrice());
-                bWriter.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Error writing dealership file: " + e.getMessage());
-        }
     }
-
 }
